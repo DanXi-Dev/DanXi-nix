@@ -68,14 +68,14 @@
         includeNDK = true;
         ndkVersions = [
           "28.2.13676358"
-          "29.0.14206865"
+          "30.0.14904198-rc1"
         ];
       };
       androidSdk = androidPkg.androidsdk;
 
       danXiRepo = {
         pname = "dan_xi";
-        version = "1.5.0+347";
+        version = "1.5.2+349";
 
         meta = with pkgs.lib; {
           description =
