@@ -72,3 +72,6 @@ android/app/.cxx
 # Claude Code
 /CLAUDE.md
 /.claude/*.local.*
+
+# Nix flake build result
+/result*
