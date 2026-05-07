@@ -113,6 +113,11 @@
           flutter.sdk=$flutter_shim_path
           EOF
 
+          # Because `flutter build apk` will overwrite the `android/local.properties` to set the flutter SDK into `/nix/store`
+          # which is immutable, we need to add another method to inform the `pluginManagement.includeBuild()` to use the shim
+          # like using environment variables.
+          export FLUTTER_ROOT="$flutter_shim_path"
+
           # Override the Maven-downloaded aapt2 with the Nix-patched system aapt2.
           # We have considered using `ORG_GRADLE_PROJECT_android.aapt2FromMavenOverride=...`, where the dot inside the env name
           # is valid in Unix. But in bash we cannot set an env with a dot in its name, and Nix devShells does not provide a way
