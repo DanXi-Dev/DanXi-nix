@@ -73,16 +73,17 @@
       };
       androidSdk = androidPkg.androidsdk;
 
-      danXiRepo = {
-        pname = "dan_xi";
-        version = "1.5.2+349";
+      danXiRepo = rec {
+        pubspec = pkgs.callPackage ./util/from-yaml.nix
+          { } ../../pubspec.yaml;
+        pname = pubspec.name;
+        inherit (pubspec) version;
 
         meta = with pkgs.lib; {
-          description =
-            "[Windows / Mac / Linux / Android / iOS] Maybe the best all-rounded service app for Fudan University students. 可能是复旦学生最好的第三方校园服务APP。";
+          inherit (pubspec) description;
           homepage = "https://danxi.fduhole.com";
           license = licenses.gpl3Only;
-          platforms = platforms.linux;
+          platforms = platforms.linux ++ platforms.windows;
           maintainers = [ ];
         };
 
