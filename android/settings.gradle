@@ -1,7 +1,7 @@
 pluginManagement {
     def flutterSdkPath = {
-        def envFlutterSdkPath = System.getenv("FLUTTER_ROOT")
-        if (envFlutterSdkPath != null) {
+        def envFlutterSdkPath = System.getenv("FLUTTER_ROOT")?.trim()
+        if (envFlutterSdkPath) {
             return envFlutterSdkPath
         }
         def properties = new Properties()
