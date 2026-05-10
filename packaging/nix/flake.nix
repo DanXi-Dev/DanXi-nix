@@ -86,7 +86,7 @@
           maintainers = [ ];
         };
 
-        autoPubspecLock = ./. + "/pubspec.lock";
+        autoPubspecLock = ../.. + "/pubspec.lock";
         gitHashes = {
           flutter_inappwebview_linux =
             "sha256-alwvKGs1mnM+JGOGBzV8d6PRAcAXaZA6AZ08X7zd6/M=";
@@ -157,10 +157,10 @@
           EOF
         '';
       };
-      danXiPackagesDefault = pkgs.callPackage ./nix/packages {
+      danXiPackagesDefault = pkgs.callPackage ./packages {
         inherit danXiRepo;
       };
-      danXiDevShellsDefault = pkgs.callPackage ./nix/devShells {
+      danXiDevShellsDefault = pkgs.callPackage ./devShells {
         inherit danXiRepo androidSdk danXiPackagesDefault;
       };
     in
