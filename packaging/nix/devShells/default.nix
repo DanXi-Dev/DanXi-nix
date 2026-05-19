@@ -1,10 +1,9 @@
 { androidSdk
-, danXiPackagesDefault
 , danXiRepo
 , flutter
 , google-chrome
-, jdk23
 , pkgs
+, selfPkgs
 }:
 
 let
@@ -15,14 +14,20 @@ let
 in
 
 pkgs.mkShell {
-  inherit (danXiPackagesDefault) nativeBuildInputs;
+  nativeBuildInputs = builtins.concatLists [
+    selfPkgs.default.nativeBuildInputs
+    selfPkgs.android.nativeBuildInputs
+  ];
 
-  buildInputs = [
-    androidSdk
-    google-chrome
-
-    jdk23
-  ] ++ danXiPackagesDefault.buildInputs;
+  buildInputs = builtins.concatLists [
+    [
+      flutter
+      androidSdk
+      google-chrome
+    ]
+    selfPkgs.default.buildInputs
+    selfPkgs.android.buildInputs
+  ];
 
   env = {
     ANDROID_HOME = "${androidSdk}/libexec/android-sdk";

@@ -19,7 +19,6 @@ in
   src = ../../..;
 
   nativeBuildInputs = [
-    flutter
     gradle_9
     jdk23
   ];

@@ -17,6 +17,7 @@
     , nix-wpe-webkit
     }:
     let
+      # Waiting for tests: x86_64-darwin, aarch64-linux, aarch64-darwin.
       system = "x86_64-linux";
       unfreeConfig = {
         allowUnfreePredicate = pkg:
@@ -174,7 +175,8 @@
         inherit danXiRepo androidSdk;
       };
       danXiDevShellsDefault = pkgs.callPackage ./devShells {
-        inherit danXiRepo androidSdk danXiPackagesDefault;
+        inherit danXiRepo androidSdk;
+        selfPkgs = self.packages.${system};
       };
     in
     {
