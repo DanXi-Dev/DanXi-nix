@@ -141,10 +141,10 @@
           # devShells does not provide a way to set an env not relying
           # on bash, we have to rewrite the user's system gradle
           # properties.
-          gradle_home="''${GRADLE_USER_HOME:-$HOME/.gradle}"
-          mkdir -p "$gradle_home"
+          gradle_user_home="''${GRADLE_USER_HOME:-$HOME/.gradle}"
+          mkdir -p "$gradle_user_home"
 
-          gradle_prop_path="$gradle_home/gradle.properties"
+          gradle_prop_path="$gradle_user_home/gradle.properties"
           if [ -f "$gradle_prop_path" ]; then
             args=(
               -i

@@ -11,9 +11,10 @@ let
   yamlToJson = runCommand "yamlToJson"
     {
       nativeBuildInputs = [ yq ];
-    } ''
-    yq . '${yamlFile}' >"$out"
-  '';
+    }
+    ''
+      yq . '${yamlFile}' >"$out"
+    '';
   parsedYaml = builtins.fromJSON (builtins.readFile yamlToJson);
 in
 parsedYaml

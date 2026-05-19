@@ -34,9 +34,15 @@ pkgs.mkShell {
 
     local_prop_path='android/local.properties'
     if [ -f "$local_prop_path" ]; then
-      sed -i '/^\s*flutter\./d' "$local_prop_path"
+      args=(
+        sed -i
+        -e '/^\s*flutter\./d'
+        -e '/^\s*sdk\.dir=/d'
+        "$local_prop_path"
+      ) && "''${args[@]}"
     fi
     cat >>"$local_prop_path" <<-EOF
+    sdk.dir=$ANDROID_HOME
     flutter.sdk=$FLUTTER_ROOT
     EOF
 

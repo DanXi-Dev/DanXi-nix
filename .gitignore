@@ -74,4 +74,4 @@ android/app/.cxx
 /.claude/*.local.*
 
 # Nix flake build result
-/result*
+result*
