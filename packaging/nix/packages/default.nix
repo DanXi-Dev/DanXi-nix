@@ -61,7 +61,6 @@ flutter.buildFlutterApplication {
   };
 
   preBuild = ''
-    packageRun intl_utils -e generate
-    packageRun build_runner build --delete-conflicting-outputs
+    ${danXiRepo.generateDartFiles}
   '';
 }

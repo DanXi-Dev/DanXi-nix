@@ -118,10 +118,7 @@
           if [ ! -d "$flutter_shim_path" ]; then
             echo "Nix devShell: Copying SDK to writable cache: $flutter_shim_path"
             cp -a '${flutter}' "$flutter_shim_path"
-            (
-              cd "$flutter_shim_path/packages/flutter_tools/gradle"
-              chmod +w '.' '.gradle'
-            )
+            chmod -R +w "$flutter_shim_path"
           fi
 
           # Because `flutter build apk` will overwrite the
@@ -130,6 +127,13 @@
           # method to inform the `pluginManagement.includeBuild()` to
           # use the shim like using environment variables.
           export FLUTTER_ROOT="$flutter_shim_path"
+
+          args=(
+            sed
+            -Ei
+            's/(kotlin\("jvm"\)) version "1.9.20"/\1 version "1.9.22"/'
+            "$FLUTTER_ROOT/packages/flutter_tools/gradle/build.gradle.kts"
+          ) && "''${args[@]}"
         '';
 
         configureAapt2 = ''
@@ -157,9 +161,17 @@
           android.aapt2FromMavenOverride=$ANDROID_HOME/build-tools/${androidBuildToolsVersion}/aapt2
           EOF
         '';
+
+        generateDartFiles = ''
+          packageRun intl_utils -e generate
+          packageRun build_runner build --delete-conflicting-outputs
+        '';
       };
       danXiPackagesDefault = pkgs.callPackage ./packages {
         inherit danXiRepo;
+      };
+      danXiPackagesAndroid = pkgs.callPackage ./packages/android.nix {
+        inherit danXiRepo androidSdk;
       };
       danXiDevShellsDefault = pkgs.callPackage ./devShells {
         inherit danXiRepo androidSdk danXiPackagesDefault;
@@ -168,7 +180,10 @@
     {
 
       defaultPackage.${system} = danXiPackagesDefault;
-      packages.${system}.default = danXiPackagesDefault;
+      packages.${system} = {
+        default = danXiPackagesDefault;
+        android = danXiPackagesAndroid;
+      };
 
       devShells.${system}.default = danXiDevShellsDefault;
 
