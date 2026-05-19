@@ -1,5 +1,22 @@
 {
   "nodes": {
+    "dan-xi-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1778747157,
+        "narHash": "sha256-JHrt9wLnEK6n1a/Ae7BVKGBvQY6jZ+GmTvaEfO/uUVU=",
+        "owner": "DanXi-Dev",
+        "repo": "DanXi",
+        "rev": "ca3054623e97262eaa28c7ca254f12b2f9475c32",
+        "type": "github"
+      },
+      "original": {
+        "owner": "DanXi-Dev",
+        "ref": "main",
+        "repo": "DanXi",
+        "type": "github"
+      }
+    },
     "nix-wpe-webkit": {
       "inputs": {
         "nixpkgs": "nixpkgs"
@@ -84,6 +101,7 @@
     },
     "root": {
       "inputs": {
+        "dan-xi-src": "dan-xi-src",
         "nix-wpe-webkit": "nix-wpe-webkit",
         "nixpkgs": "nixpkgs_2",
         "nixpkgs-android": "nixpkgs-android",

@@ -39,9 +39,7 @@ let
 in
 
 flutter.buildFlutterApplication {
-  inherit (danXiRepo) pname version meta autoPubspecLock gitHashes;
-
-  src = ../../..;
+  inherit (danXiRepo) src pname version meta autoPubspecLock gitHashes;
 
   nativeBuildInputs = [ pkg-config ];
   buildInputs = [

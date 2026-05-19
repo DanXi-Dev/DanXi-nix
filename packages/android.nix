@@ -14,9 +14,7 @@ let
 in
 
 (flutter.buildFlutterApplication (finalAttrs: {
-  inherit (danXiRepo) pname version meta autoPubspecLock gitHashes;
-
-  src = ../../..;
+  inherit (danXiRepo) src pname version meta autoPubspecLock gitHashes;
 
   nativeBuildInputs = [
     gradle_9

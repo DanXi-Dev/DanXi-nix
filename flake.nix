@@ -7,6 +7,11 @@
       "github:sseu-buhzzi/nixpkgs?ref=20260505/fix-android-ndk-path";
     nixpkgs-jdk23.url = "github:nixos/nixpkgs?ref=25.05";
     nix-wpe-webkit.url = "github:eval-exec/nix-wpe-webkit";
+
+    dan-xi-src = {
+      url = "github:DanXi-Dev/DanXi?ref=main";
+      flake = false;
+    };
   };
 
   outputs =
@@ -15,6 +20,7 @@
     , nixpkgs-android
     , nixpkgs-jdk23
     , nix-wpe-webkit
+    , dan-xi-src
     }:
     let
       # Waiting for tests: x86_64-darwin, aarch64-linux, aarch64-darwin.
@@ -75,8 +81,10 @@
       androidSdk = androidPkg.androidsdk;
 
       danXiRepo = rec {
+        src = dan-xi-src;
+
         pubspec = pkgs.callPackage ./util/from-yaml.nix
-          { } ../../pubspec.yaml;
+          { } "${src}/pubspec.yaml";
         pname = pubspec.name;
         inherit (pubspec) version;
 
@@ -88,7 +96,7 @@
           maintainers = [ ];
         };
 
-        autoPubspecLock = ../.. + "/pubspec.lock";
+        autoPubspecLock = "${dan-xi-src}/pubspec.lock";
         gitHashes = {
           flutter_inappwebview_linux =
             "sha256-alwvKGs1mnM+JGOGBzV8d6PRAcAXaZA6AZ08X7zd6/M=";
