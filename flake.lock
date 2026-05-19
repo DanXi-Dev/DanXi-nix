@@ -1,0 +1,114 @@
+{
+  "nodes": {
+    "dan-xi-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1778747157,
+        "narHash": "sha256-JHrt9wLnEK6n1a/Ae7BVKGBvQY6jZ+GmTvaEfO/uUVU=",
+        "owner": "DanXi-Dev",
+        "repo": "DanXi",
+        "rev": "ca3054623e97262eaa28c7ca254f12b2f9475c32",
+        "type": "github"
+      },
+      "original": {
+        "owner": "DanXi-Dev",
+        "ref": "main",
+        "repo": "DanXi",
+        "type": "github"
+      }
+    },
+    "nix-wpe-webkit": {
+      "inputs": {
+        "nixpkgs": "nixpkgs"
+      },
+      "locked": {
+        "lastModified": 1770385823,
+        "narHash": "sha256-x+JrlE1TjyplLR5wdCOi37vH/OhPk/Alt8Q8lTq8LKQ=",
+        "owner": "eval-exec",
+        "repo": "nix-wpe-webkit",
+        "rev": "039c6905b9fe233cd731d06d425762546073094f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "eval-exec",
+        "repo": "nix-wpe-webkit",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1770197578,
+        "narHash": "sha256-AYqlWrX09+HvGs8zM6ebZ1pwUqjkfpnv8mewYwAo+iM=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "00c21e4c93d963c50d4c0c89bfa84ed6e0694df2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs-android": {
+      "locked": {
+        "lastModified": 1777982486,
+        "narHash": "sha256-c/ckMv9UIW756dv7h60XxX7yaH/vOg6d3YQQLIQ8ig0=",
+        "owner": "sseu-buhzzi",
+        "repo": "nixpkgs",
+        "rev": "9c6c4891c726ec0000dac4609c5c5d179baad914",
+        "type": "github"
+      },
+      "original": {
+        "owner": "sseu-buhzzi",
+        "ref": "20260505/fix-android-ndk-path",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs-jdk23": {
+      "locked": {
+        "lastModified": 1748026580,
+        "narHash": "sha256-rWtXrcIzU5wm/C8F9LWvUfBGu5U5E7cFzPYT1pHIJaQ=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "11cb3517b3af6af300dd6c055aeda73c9bf52c48",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "25.05",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1777268161,
+        "narHash": "sha256-bxrdOn8SCOv8tN4JbTF/TXq7kjo9ag4M+C8yzzIRYbE=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "1c3fe55ad329cbcb28471bb30f05c9827f724c76",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "dan-xi-src": "dan-xi-src",
+        "nix-wpe-webkit": "nix-wpe-webkit",
+        "nixpkgs": "nixpkgs_2",
+        "nixpkgs-android": "nixpkgs-android",
+        "nixpkgs-jdk23": "nixpkgs-jdk23"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
