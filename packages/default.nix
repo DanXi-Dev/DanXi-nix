@@ -1,4 +1,5 @@
-{ danXiRepo
+{ callPackage
+, danXiRepo
 , fetchFromGitHub
 , flutter
 , glib
@@ -39,7 +40,9 @@ let
 in
 
 flutter.buildFlutterApplication {
-  inherit (danXiRepo) src pname version meta autoPubspecLock gitHashes;
+  inherit (danXiRepo) pname version meta autoPubspecLock gitHashes;
+
+  src = callPackage ../util/generated-src.nix { inherit danXiRepo; };
 
   nativeBuildInputs = [ pkg-config ];
   buildInputs = [
@@ -57,8 +60,4 @@ flutter.buildFlutterApplication {
   customSourceBuilders = {
     flutter_inappwebview_linux = customFlutterInappwebviewLinux;
   };
-
-  preBuild = ''
-    ${danXiRepo.generateDartFiles}
-  '';
 }
