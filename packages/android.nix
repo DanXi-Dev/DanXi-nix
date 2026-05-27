@@ -1,11 +1,11 @@
 { androidSdk
 , bash
+, callPackage
 , danXiRepo
 , flutter
 , gradle_9
 , jdk23
 , lib
-, ninja
 }:
 
 let
@@ -13,87 +13,16 @@ let
     inherit flutter;
     root = "$TMPDIR";
   };
-
-  generatedSrc = (flutter.buildFlutterApplication (finalAttrs: {
-    inherit (danXiRepo) src pname version meta autoPubspecLock gitHashes;
-
-    nativeBuildInputs = [
-      gradle_9
-      jdk23
-      ninja
-    ];
-
-    env = {
-      ANDROID_HOME = "${androidSdk}/libexec/android-sdk";
-    };
-
-    preBuild = ''
-      cp -a "$src/." .
-      chmod -R +w .
-
-      export HOME="$TMPDIR/home"
-      mkdir -p "$HOME"
-
-      ${linkFlutterShim}
-
-      local_prop_path='android/local.properties'
-      cat >>"$local_prop_path" <<-EOF
-      flutter.sdk=$FLUTTER_ROOT
-      EOF
-
-      ${danXiRepo.configureAapt2}
-
-      export PATH="${ninja}/bin:$PATH"
-
-      ${danXiRepo.generateDartFiles}
-
-      echo 'Generate the debug keystore.'
-      args=(
-        keytool
-        -genkey -v
-        -keystore debug.keystore
-        -alias androiddebugkey
-        -storepass android
-        -keypass android
-        -keyalg RSA
-        -keysize 2048
-        -validity 10000
-        -dname 'CN=Android Debug,O=Android,C=US'
-      ) && "''${args[@]}"
-      cat >android/key.properties <<-EOF
-      storeFile=../../debug.keystore
-      storePassword=android
-      keyAlias=androiddebugkey
-      keyPassword=android
-      EOF
-    '';
-
-    buildPhase = ''
-      runHook preBuild
-
-      runHook postBuild
-    '';
-
-    installPhase = ''
-      mkdir -p "$out"
-      cp -aL . "$out"
-    '';
-  })).overrideAttrs (oldAttrs: {
-    outputs = lib.lists.subtractLists
-      [ "debug" "pubcache" ]
-      oldAttrs.outputs;
-  });
 in
 
 (flutter.buildFlutterApplication (finalAttrs: {
   inherit (danXiRepo) pname version meta autoPubspecLock gitHashes;
 
-  src = generatedSrc;
+  src = callPackage ../util/generated-src.nix { inherit danXiRepo; };
 
   nativeBuildInputs = [
     gradle_9
     jdk23
-    ninja
   ];
 
   mitmCache = gradle_9.fetchDeps {
@@ -109,7 +38,6 @@ in
   gradleUpdateTask = "assembleRelease";
   gradleFlags = [
     "-p android"
-    "--stacktrace"
   ];
 
   env = {
@@ -158,13 +86,31 @@ in
 
     ${danXiRepo.configureAapt2}
 
-    export PATH="${ninja}/bin:$PATH"
+    echo 'Generate the debug keystore.'
+    args=(
+      keytool
+      -genkey -v
+      -keystore debug.keystore
+      -alias androiddebugkey
+      -storepass android
+      -keypass android
+      -keyalg RSA
+      -keysize 2048
+      -validity 10000
+      -dname 'CN=Android Debug,O=Android,C=US'
+    ) && "''${args[@]}"
+    cat >android/key.properties <<-EOF
+    storeFile=../../debug.keystore
+    storePassword=android
+    keyAlias=androiddebugkey
+    keyPassword=android
+    EOF
   '';
 
   buildPhase = ''
     runHook preBuild
 
-    # gradle already includes -p android --stacktrace from gradleFlags
+    # Gradle already includes -p android from gradleFlags.
     args=(
       gradle
       --no-daemon
