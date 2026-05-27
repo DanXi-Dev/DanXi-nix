@@ -51,22 +51,6 @@
         "type": "github"
       }
     },
-    "nixpkgs-android": {
-      "locked": {
-        "lastModified": 1777982486,
-        "narHash": "sha256-c/ckMv9UIW756dv7h60XxX7yaH/vOg6d3YQQLIQ8ig0=",
-        "owner": "sseu-buhzzi",
-        "repo": "nixpkgs",
-        "rev": "9c6c4891c726ec0000dac4609c5c5d179baad914",
-        "type": "github"
-      },
-      "original": {
-        "owner": "sseu-buhzzi",
-        "ref": "20260505/fix-android-ndk-path",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "nixpkgs-jdk23": {
       "locked": {
         "lastModified": 1748026580,
@@ -104,7 +88,6 @@
         "dan-xi-src": "dan-xi-src",
         "nix-wpe-webkit": "nix-wpe-webkit",
         "nixpkgs": "nixpkgs_2",
-        "nixpkgs-android": "nixpkgs-android",
         "nixpkgs-jdk23": "nixpkgs-jdk23"
       }
     }

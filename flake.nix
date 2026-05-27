@@ -3,8 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
-    nixpkgs-android.url =
-      "github:sseu-buhzzi/nixpkgs?ref=20260505/fix-android-ndk-path";
     nixpkgs-jdk23.url = "github:nixos/nixpkgs?ref=25.05";
     nix-wpe-webkit.url = "github:eval-exec/nix-wpe-webkit";
 
@@ -17,7 +15,6 @@
   outputs =
     { self
     , nixpkgs
-    , nixpkgs-android
     , nixpkgs-jdk23
     , nix-wpe-webkit
     , dan-xi-src
@@ -47,10 +44,6 @@
           ];
         android_sdk.accept_license = true;
       };
-      pkgsAndroid = import nixpkgs-android {
-        inherit system;
-        config = unfreeConfig;
-      };
       pkgsJdk23 = import nixpkgs-jdk23 { inherit system; };
       pkgs = import nixpkgs {
         inherit system;
@@ -61,7 +54,6 @@
               buildInputs = (old.buildInputs or [ ]) ++ [ final.expat ];
             });
           })
-          (final: prev: { inherit (pkgsAndroid) androidenv; })
           (final: prev: { inherit (pkgsJdk23) jdk23; })
         ];
         config = unfreeConfig;
