@@ -16,9 +16,6 @@
   buildPhase = ''
     runHook preBuild
 
-    cp -a "$src/." .
-    chmod -R +w .
-
     ${danXiRepo.generateDartFiles}
 
     runHook postBuild

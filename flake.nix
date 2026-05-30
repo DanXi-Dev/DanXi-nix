@@ -73,7 +73,7 @@
       androidSdk = androidPkg.androidsdk;
 
       danXiRepo = rec {
-        src = dan-xi-src;
+        src = pkgs.lib.sources.cleanSource dan-xi-src;
 
         pubspec = pkgs.callPackage ./util/from-yaml.nix
           { } "${src}/pubspec.yaml";
