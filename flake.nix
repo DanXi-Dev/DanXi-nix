@@ -13,17 +13,19 @@
   };
 
   outputs =
-    { self
-    , nixpkgs
-    , nixpkgs-jdk23
-    , nix-wpe-webkit
-    , dan-xi-src
+    {
+      self,
+      nixpkgs,
+      nixpkgs-jdk23,
+      nix-wpe-webkit,
+      dan-xi-src,
     }:
     let
       # Waiting for tests: x86_64-darwin, aarch64-linux, aarch64-darwin.
       system = "x86_64-linux";
       unfreeConfig = {
-        allowUnfreePredicate = pkg:
+        allowUnfreePredicate =
+          pkg:
           builtins.elem (pkgs.lib.getName pkg) [
             "android-sdk-cmdline-tools"
             "android-sdk-platform-tools"
@@ -49,11 +51,6 @@
         inherit system;
         overlays = [
           nix-wpe-webkit.overlays.default
-          (final: prev: {
-            wpewebkit = prev.wpewebkit.overrideAttrs (old: {
-              buildInputs = (old.buildInputs or [ ]) ++ [ final.expat ];
-            });
-          })
           (final: prev: { inherit (pkgsJdk23) jdk23; })
         ];
         config = unfreeConfig;
@@ -61,7 +58,11 @@
 
       androidBuildToolsVersion = "35.0.0";
       androidPkg = pkgs.androidenv.composeAndroidPackages {
-        platformVersions = [ "35" "36" "37" ];
+        platformVersions = [
+          "35"
+          "36"
+          "37"
+        ];
         buildToolsVersions = [ androidBuildToolsVersion ];
         cmakeVersions = [ "3.22.1" ];
         includeNDK = true;
@@ -75,8 +76,9 @@
       danXiRepo = rec {
         src = pkgs.lib.sources.cleanSource dan-xi-src;
 
-        pubspec = pkgs.callPackage ./util/from-yaml.nix
-          { } "${src}/pubspec.yaml";
+        pubspec =
+          pkgs.callPackage ./util/from-yaml.nix { }
+            "${src}/pubspec.yaml";
         pname = pubspec.name;
         inherit (pubspec) version;
 
@@ -90,22 +92,14 @@
 
         autoPubspecLock = "${dan-xi-src}/pubspec.lock";
         gitHashes = {
-          flutter_inappwebview_linux =
-            "sha256-alwvKGs1mnM+JGOGBzV8d6PRAcAXaZA6AZ08X7zd6/M=";
-          flutter_markdown_plus =
-            "sha256-2Sd7elkECZQ3+NGSdx39BHJ9GYsSglCWLMwxZBFLO4A=";
-          flutter_progress_dialog =
-            "sha256-L8TD7HXLQdqnQHU40fOrtCEa962WCB1Gm5bHy0TB6JI=";
-          flutter_secure_storage_linux =
-            "sha256-cFNHW7dAaX8BV7arwbn68GgkkBeiAgPfhMOAFSJWlyY=";
-          ical =
-            "sha256-/f51DJkshr3VQ8CJdh7k+lNJ2gohCl2iI9Vx1YRol8Q=";
-          linkify =
-            "sha256-IgSrhN5EkTM+Wua5Ns5rS90iR5zSlA3QpVWWXJYE6sQ=";
-          receive_intent =
-            "sha256-wzYDVZZdaoxwCXLJLJDTNUzpl/brroUSyjB9s2AAWl8=";
-          xiao_mi_push_plugin =
-            "sha256-5emwkL33CU/k/FHY3EccRyPE/UUs3+i0+tXfMPa6Z4M=";
+          flutter_inappwebview_linux = "sha256-alwvKGs1mnM+JGOGBzV8d6PRAcAXaZA6AZ08X7zd6/M=";
+          flutter_markdown_plus = "sha256-W+3D4BSkIiJvN3qRuh5mKk+6jQsAZ3E92JI+7G3Ttmk=";
+          flutter_progress_dialog = "sha256-L8TD7HXLQdqnQHU40fOrtCEa962WCB1Gm5bHy0TB6JI=";
+          flutter_secure_storage_linux = "sha256-cFNHW7dAaX8BV7arwbn68GgkkBeiAgPfhMOAFSJWlyY=";
+          ical = "sha256-/f51DJkshr3VQ8CJdh7k+lNJ2gohCl2iI9Vx1YRol8Q=";
+          linkify = "sha256-IgSrhN5EkTM+Wua5Ns5rS90iR5zSlA3QpVWWXJYE6sQ=";
+          receive_intent = "sha256-wzYDVZZdaoxwCXLJLJDTNUzpl/brroUSyjB9s2AAWl8=";
+          xiao_mi_push_plugin = "sha256-pEKdVbOTfPEaBB/k0VZdI8G4rv6N3pHeX2dvovGVQaI=";
         };
 
         linkFlutterShimWith = { flutter, root }: ''
