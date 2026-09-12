@@ -56,8 +56,60 @@
         config = unfreeConfig;
       };
 
-      androidBuildToolsVersion = "35.0.0";
+      androidBuildToolsVersion = "36.0.0";
+      # DanXi pins NDK 30.0.16138531 (r30-beta3), which nixpkgs'
+      # androidenv repo.json does not list yet. Ship it in the SDK
+      # anyways so that Gradle never attempts to auto-install an SDK
+      # package: it cannot write into the read-only /nix/store SDK, and
+      # its license is android-sdk-preview-license, which the nix SDK
+      # does not even declare. NDK entry and checksum taken from
+      # https://dl.google.com/android/repository/repository2-1.xml.
+      androidRepoJson =
+        let
+          repo = builtins.fromJSON (
+            builtins.readFile "${pkgs.path}/pkgs/development/mobile/androidenv/repo.json"
+          );
+        in
+        pkgs.writeText "android-repo.json" (
+          builtins.toJSON (
+            repo
+            // {
+              packages = repo.packages // {
+                ndk = repo.packages.ndk // {
+                  "30.0.16138531-rc3" = {
+                    archives = [
+                      {
+                        arch = "all";
+                        os = "linux";
+                        sha1 = "f66e852ac01a57f74bcf6fd96dcea04dda5ea392";
+                        size = 738755979;
+                        url = "https://dl.google.com/android/repository/android-ndk-r30-beta3-linux.zip";
+                      }
+                    ];
+                    displayName = "NDK (Side by side) 30.0.16138531";
+                    license = "android-sdk-preview-license";
+                    name = "ndk";
+                    path = "ndk/30.0.16138531";
+                    revision = "30.0.16138531";
+                    "revision-details" = {
+                      "major:0" = "30";
+                      "minor:1" = "0";
+                      "micro:2" = "16138531";
+                      "preview:3" = "3";
+                    };
+                    "type-details" = {
+                      "element-attributes" = {
+                        "xsi:type" = "ns5:genericDetailsType";
+                      };
+                    };
+                  };
+                };
+              };
+            }
+          )
+        );
       androidPkg = pkgs.androidenv.composeAndroidPackages {
+        repoJson = androidRepoJson;
         platformVersions = [
           "35"
           "36"
@@ -68,7 +120,7 @@
         includeNDK = true;
         ndkVersions = [
           "28.2.13676358"
-          "30.0.14904198-rc1"
+          "30.0.16138531-rc3"
         ];
       };
       androidSdk = androidPkg.androidsdk;
