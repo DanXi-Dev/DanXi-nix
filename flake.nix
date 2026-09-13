@@ -231,6 +231,9 @@
       packages.${system} = {
         default = danXiPackagesDefault;
         android = danXiPackagesAndroid;
+        updateDepsJson = pkgs.callPackage ./packages/update-deps-json.nix {
+          inherit (danXiPackagesAndroid.mitmCache) updateScript;
+        };
       };
 
       devShells.${system}.default = danXiDevShellsDefault;
