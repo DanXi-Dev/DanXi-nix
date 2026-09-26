@@ -1,0 +1,15 @@
+diff --git a/android/app/build.gradle b/android/app/build.gradle
+index b66e0873..218ccef4 100644
+--- a/android/app/build.gradle
++++ b/android/app/build.gradle
+@@ -65,6 +65,9 @@ android {
+     lint {
+         disable 'InvalidPackage'
+     }
++    dependenciesInfo {
++        includeInApk = false
++    }
+ }
+ 
+ flutter {
+
