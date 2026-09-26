@@ -20,6 +20,20 @@ in
 
   src = callPackage ../util/generated-src.nix { inherit danXiRepo; };
 
+  # AGP's SdkDependencyDataGeneratorTask (Play SDK Console metadata) embeds a
+  # non-reproducible blob into the APK signing block, so repeated builds of the
+  # same derivation differ. The blob has no effect on the installed app, so turn
+  # it off to make the APK deterministic.
+  patches = [
+    ./android-dependencies-info.patch
+  ];
+  # -F0 disables fuzz, so a drifted context fails the build instead of being
+  # silently applied somewhere else.
+  patchFlags = [
+    "-p1"
+    "-F0"
+  ];
+
   nativeBuildInputs = [
     gradle_9
     jdk23
@@ -104,21 +118,13 @@ in
 
     ${danXiRepo.configureAapt2}
 
-    echo 'Generate the debug keystore.'
-    args=(
-      keytool
-      -genkey -v
-      -keystore debug.keystore
-      -alias androiddebugkey
-      -storepass android
-      -keypass android
-      -keyalg RSA
-      -keysize 2048
-      -validity 10000
-      -dname 'CN=Android Debug,O=Android,C=US'
-    ) && "''${args[@]}"
+    # Use the keystore committed in this repository instead of running
+    # `keytool -genkey`: keytool cannot be made deterministic (random RSA
+    # key, random certificate serial, current-time validity), so every build
+    # would sign the APK with a different certificate. This is the standard
+    # public Android debug key, not a release signing secret.
     cat >android/key.properties <<-EOF
-    storeFile=../../debug.keystore
+    storeFile=${./android-debug.keystore}
     storePassword=android
     keyAlias=androiddebugkey
     keyPassword=android
