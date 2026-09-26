@@ -77,6 +77,24 @@ in
 
     org.gradle.jvmargs=''${args[*]}
     EOF
+
+      # Flutter's build runs android/gradlew directly. Its bundled wrapper
+      # would download a Gradle distribution from services.gradle.org (not
+      # reachable in the sandbox) and would bypass the nixpkgs Gradle hook.
+      # Flutter only injects its wrapper when android/gradlew is missing, so
+      # drop a shim that execs the Nix Gradle with the flags the hook already
+      # assembled in gradleFlagsArray (init script + mitm-cache proxy and
+      # truststore). No `-p android` here: Flutter runs with cwd=android/.
+      gradle_flags="$(printf '%q ' "''${gradleFlagsArray[@]}")"
+      cat >android/gradlew <<GRADLEW
+    #!${bash}/bin/bash
+    case "\$1" in
+      --version|-v) exec gradle "\$@";;
+    esac
+    exec gradle ''${gradle_flags} "\$@"
+    GRADLEW
+      chmod +x android/gradlew
+
     fi
 
     local_prop_path='android/local.properties'
@@ -110,13 +128,11 @@ in
   buildPhase = ''
     runHook preBuild
 
-    # Gradle already includes -p android from gradleFlags.
-    args=(
-      gradle
-      --no-daemon
-      --full-stacktrace --info -Pverbose=true
-      assembleRelease
-    ) && "''${args[@]}"
+    # Flutter writes flutter.versionName/versionCode into
+    # android/local.properties from pubspec.yaml before invoking Gradle, so
+    # the APK carries the real version. --no-pub: package_config.json comes
+    # from the Nix pubcache and pub would try to reach pub.dev in the sandbox.
+    flutter build apk --release --no-pub
 
     runHook postBuild
   '';
